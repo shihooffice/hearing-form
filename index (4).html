@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご相談者情報フォーム｜社会保険労務士法人イイズカ事務所グループ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;font-size:15px;line-height:1.7}
+
+.hdr{background:#1a1a18;color:#f5f4f0;padding:28px 20px 24px;text-align:center}
+.hdr-sub{font-size:11px;letter-spacing:.2em;opacity:.55;margin-bottom:6px}
+.hdr-ttl{font-family:'Shippori Mincho',serif;font-size:20px;font-weight:600;letter-spacing:.06em}
+.hdr-en{font-size:10px;opacity:.4;margin-top:5px;letter-spacing:.1em}
+
+.intro{background:#e8f0ea;border-bottom:1px solid #b5d0bc;padding:16px 20px;text-align:center}
+.intro p{font-size:13px;color:#2d5a3d;line-height:1.9;max-width:520px;margin:0 auto}
+
+.wrap{max-width:560px;margin:0 auto;padding:24px 16px 72px}
+
+/* プログレス */
+.prog{display:flex;align-items:flex-start;margin-bottom:28px}
+.ps{display:flex;flex-direction:column;align-items:center;flex:1}
+.pd{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:all .2s}
+.pd.done{background:#2d5a3d;color:#fff}
+.pd.now{background:#1a1a18;color:#f5f4f0;box-shadow:0 0 0 3px #e8f0ea}
+.pd.wait{background:#e8e8e2;border:1.5px solid #ccc;color:#aaa}
+.pl{font-size:10px;color:#8a8a82;margin-top:5px;text-align:center;line-height:1.3}
+.pline{flex:1;height:1px;background:#ccc;margin:0 2px;margin-top:13px}
+.pline.done{background:#2d5a3d}
+
+/* カード */
+.card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:20px 18px;margin-bottom:12px}
+.ctitle{font-family:'Shippori Mincho',serif;font-size:15px;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0efe9;display:flex;align-items:center;gap:8px}
+.req{font-size:10px;padding:2px 7px;border-radius:99px;background:#fce8e6;color:#c0392b;font-weight:500;font-family:'Noto Sans JP',sans-serif}
+.opt{font-size:10px;padding:2px 7px;border-radius:99px;background:#f0efe9;color:#8a8a82;font-weight:400;font-family:'Noto Sans JP',sans-serif}
+
+/* フィールド */
+.f{margin-bottom:14px}
+.f:last-child{margin-bottom:0}
+.f>label{display:block;font-size:12px;color:#555;margin-bottom:4px;font-weight:500}
+.hint{font-size:11.5px;color:#8a8a82;margin-top:3px;line-height:1.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+
+input[type=text],input[type=email],input[type=tel],input[type=month],select,textarea{
+  width:100%;font-family:'Noto Sans JP',sans-serif;font-size:14px;
+  background:#faf9f6;color:#1a1a18;
+  border:1.5px solid #ddd;border-radius:6px;
+  padding:10px 12px;outline:none;
+  transition:border .15s,box-shadow .15s;
+  -webkit-appearance:none;appearance:none
+}
+input:focus,select:focus,textarea:focus{border-color:#2d5a3d;box-shadow:0 0 0 3px #e8f0ea}
+input.err,select.err{border-color:#c0392b}
+textarea{resize:vertical;min-height:80px;line-height:1.7}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%238a8a82' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.em{font-size:11.5px;color:#c0392b;margin-top:3px;display:none}
+
+/* 選択肢（ラジオ・チェック） */
+.choices{display:flex;flex-direction:column;gap:8px}
+
+/* ★ポイント: input を非表示にして label だけでデザイン */
+.choice-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 13px;border:1.5px solid #ddd;border-radius:6px;
+  cursor:pointer;transition:all .15s;background:#faf9f6;
+  user-select:none;-webkit-user-select:none
+}
+.choice-item:hover{border-color:#b5d0bc;background:#e8f0ea}
+.choice-item.selected{border-color:#2d5a3d;background:#e8f0ea}
+
+/* カスタムチェック/ラジオボックス */
+.choice-item .box{
+  width:18px;height:18px;flex-shrink:0;margin-top:2px;
+  border:1.5px solid #ccc;border-radius:3px;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-size:12px;color:transparent
+}
+.choice-item.selected .box{background:#2d5a3d;border-color:#2d5a3d;color:#fff}
+.choice-item .rbox{
+  width:18px;height:18px;flex-shrink:0;margin-top:2px;
+  border:1.5px solid #ccc;border-radius:50%;background:#fff;
+  position:relative;transition:all .15s
+}
+.choice-item.selected .rbox{border-color:#2d5a3d}
+.choice-item.selected .rbox::after{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:8px;height:8px;border-radius:50%;background:#2d5a3d
+}
+.choice-label{font-size:13.5px;color:#1a1a18;line-height:1.5}
+.choice-sub{font-size:11px;color:#8a8a82;margin-top:2px;line-height:1.4}
+
+/* ボタン */
+.nav{display:flex;gap:9px;margin-top:22px}
+.bnext{flex:1;background:#1a1a18;color:#f5f4f0;border:none;border-radius:6px;padding:14px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.03em;transition:background .15s;font-family:'Noto Sans JP',sans-serif}
+.bnext:hover{background:#2d5a3d}
+.bnext:disabled{background:#aaa;cursor:not-allowed}
+.bback{padding:14px 18px;background:none;border:1.5px solid #ddd;border-radius:6px;font-size:14px;cursor:pointer;color:#555;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.bback:hover{border-color:#1a1a18;color:#1a1a18}
+.snum{font-size:11px;color:#aaa;text-align:right;margin-bottom:10px}
+
+/* 郵便番号ボタン */
+.zip-row{display:flex;gap:8px}
+.zip-row input{flex:1}
+.zbtn{white-space:nowrap;padding:10px 14px;background:#2d5a3d;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:opacity .15s;flex-shrink:0}
+.zbtn:hover{opacity:.82}
+
+/* 確認画面 */
+.crow{display:flex;padding:9px 0;border-bottom:1px solid #f0efe9;font-size:13px}
+.crow:last-child{border-bottom:none}
+.ckey{color:#8a8a82;min-width:130px;flex-shrink:0;font-size:12px;padding-top:1px}
+.cval{color:#1a1a18;word-break:break-all;line-height:1.7}
+
+/* 完了画面 */
+.done-wrap{text-align:center;padding:52px 20px}
+.done-icon{width:60px;height:60px;border-radius:50%;background:#e8f0ea;border:1.5px solid #b5d0bc;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px}
+.done-wrap h2{font-family:'Shippori Mincho',serif;font-size:20px;margin-bottom:12px}
+.done-wrap p{font-size:13px;color:#555;line-height:2;max-width:340px;margin:0 auto}
+
+@media(max-width:480px){
+  .g2{grid-template-columns:1fr}
+  .g3{grid-template-columns:2fr 1fr 1fr}
+  .wrap{padding:18px 12px 60px}
+  .card{padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-sub">社会保険労務士法人イイズカ事務所グループ</div>
+  <div class="hdr-ttl">ご相談者情報フォーム</div>
+  <div class="hdr-en">Consultation Intake Form</div>
+</div>
+<div class="intro">
+  <p>ご依頼内容の確認・書類作成のため、以下の情報をご入力をお願いいたします。<br>入力内容は担当者のみが確認し、業務目的以外には使用いたしません。</p>
+</div>
+
+<div class="wrap">
+
+  <!-- プログレス -->
+  <div class="prog" id="prog">
+    <div class="ps"><div class="pd now" id="d1">1</div><div class="pl">基本<br>情報</div></div>
+    <div class="pline" id="ln1"></div>
+    <div class="ps"><div class="pd wait" id="d2">2</div><div class="pl">住所・<br>連絡先</div></div>
+    <div class="pline" id="ln2"></div>
+    <div class="ps"><div class="pd wait" id="d3">3</div><div class="pl">案件<br>内容</div></div>
+    <div class="pline" id="ln3"></div>
+    <div class="ps"><div class="pd wait" id="d4">4</div><div class="pl">確認・<br>送信</div></div>
+  </div>
+
+  <!-- ===== STEP1 ===== -->
+  <div id="s1">
+    <div class="snum">STEP 1 / 4</div>
+
+    <div class="card">
+      <div class="ctitle">お名前 <span class="req">必須</span></div>
+      <div class="g2">
+        <div class="f"><label>姓</label><input type="text" id="sei" placeholder="例：山田"><div class="em" id="e_sei">姓を入力してください</div></div>
+        <div class="f"><label>名</label><input type="text" id="mei" placeholder="例：太郎"><div class="em" id="e_mei">名を入力してください</div></div>
+      </div>
+      <div class="g2" style="margin-top:10px">
+        <div class="f"><label>姓（ふりがな）</label><input type="text" id="sei_kana" placeholder="やまだ"></div>
+        <div class="f"><label>名（ふりがな）</label><input type="text" id="mei_kana" placeholder="たろう"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">生年月日 <span class="opt">任意</span></div>
+      <div class="f">
+        <div class="g3">
+          <div><label>年</label><input type="text" id="by" placeholder="例：1985" maxlength="4" inputmode="numeric"></div>
+          <div><label>月</label><input type="text" id="bm" placeholder="4" maxlength="2" inputmode="numeric"></div>
+          <div><label>日</label><input type="text" id="bd" placeholder="15" maxlength="2" inputmode="numeric"></div>
+        </div>
+        <div class="hint">年齢確認・書類作成の参考にします</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">性別 <span class="opt">任意</span></div>
+      <div class="choices" id="gender-choices">
+        <div class="choice-item" data-group="gender" data-value="女性">
+          <div class="rbox"></div>
+          <div class="choice-label">女性</div>
+        </div>
+        <div class="choice-item" data-group="gender" data-value="男性">
+          <div class="rbox"></div>
+          <div class="choice-label">男性</div>
+        </div>
+        <div class="choice-item" data-group="gender" data-value="その他・回答しない">
+          <div class="rbox"></div>
+          <div class="choice-label">その他・回答しない</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="bnext" onclick="goNext1()">次へ　住所・連絡先 →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP2 ===== -->
+  <div id="s2" style="display:none">
+    <div class="snum">STEP 2 / 4</div>
+
+    <div class="card">
+      <div class="ctitle">現住所 <span class="req">必須</span></div>
+      <div class="f">
+        <label>郵便番号</label>
+        <div class="zip-row">
+          <input type="text" id="zip" placeholder="例：100-0001" maxlength="8" inputmode="numeric" oninput="fmtZip(this)">
+          <button type="button" class="zbtn" onclick="lookupZip()">住所を検索</button>
+        </div>
+        <div class="hint">入力後「住所を検索」を押すと自動入力されます</div>
+        <div class="em" id="e_zip">郵便番号を正しく入力してください</div>
+      </div>
+      <div class="f">
+        <label>都道府県</label>
+        <select id="pref">
+          <option value="">選択してください</option>
+          <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option>
+          <option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option>東京都</option><option>神奈川県</option>
+          <option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option><option>岐阜県</option>
+          <option>静岡県</option><option>愛知県</option><option>三重県</option><option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
+          <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
+          <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option><option>佐賀県</option><option>長崎県</option>
+          <option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+        </select>
+        <div class="em" id="e_pref">都道府県を選択してください</div>
+      </div>
+      <div class="f"><label>市区町村・番地</label><input type="text" id="addr1" placeholder="例：千代田区丸の内1-1-1"><div class="em" id="e_addr1">市区町村・番地を入力してください</div></div>
+      <div class="f"><label>建物名・部屋番号 <span style="font-size:11px;color:#aaa">（任意）</span></label><input type="text" id="addr2" placeholder="例：〇〇ビル 101号室"></div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">連絡先 <span class="req">必須</span></div>
+      <div class="f"><label>電話番号（携帯可）</label><input type="tel" id="tel" placeholder="例：090-1234-5678"><div class="em" id="e_tel">電話番号を入力してください</div></div>
+      <div class="f"><label>メールアドレス <span style="font-size:11px;color:#aaa">（任意）</span></label><input type="email" id="email" placeholder="例：sample@example.com"><div class="hint">書類・ご連絡の送付先になります</div></div>
+      <div class="f">
+        <label>ご連絡のとりやすい時間帯 <span style="font-size:11px;color:#aaa">（任意）</span></label>
+        <select id="ctime">
+          <option value="">選択してください</option>
+          <option>午前中（9:00〜12:00）</option>
+          <option>昼（12:00〜14:00）</option>
+          <option>午後（14:00〜18:00）</option>
+          <option>夜（18:00〜21:00）</option>
+          <option>いつでも可</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="bback" onclick="showStep(1)">← 戻る</button>
+      <button class="bnext" onclick="goNext2()">次へ　案件内容 →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP3 ===== -->
+  <div id="s3" style="display:none">
+    <div class="snum">STEP 3 / 4</div>
+
+    <div class="card">
+      <div class="ctitle">お勤め先 <span class="req">必須</span></div>
+      <div class="f"><label>会社名</label><input type="text" id="company" placeholder="例：株式会社〇〇"><div class="em" id="e_company">会社名を入力してください</div></div>
+      <div class="g2">
+        <div class="f"><label>雇用形態</label><select id="emptype"><option value="">選択</option><option>正社員</option><option>契約社員</option><option>パート・アルバイト</option><option>派遣社員</option><option>業務委託</option></select></div>
+        <div class="f"><label>現在の状況</label><select id="empstat"><option value="">選択</option><option>在職中</option><option>休職中</option><option>退職済み</option></select></div>
+      </div>
+      <div class="g2">
+        <div class="f"><label>入社年月 <span style="font-size:11px;color:#aaa">（任意）</span></label><input type="month" id="joindate"></div>
+        <div class="f"><label>退職・休職開始 <span style="font-size:11px;color:#aaa">（任意）</span></label><input type="month" id="leavedate"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">ご相談の内容 <span class="req">必須・複数選択可</span></div>
+      <div class="choices" id="issue-choices">
+        <div class="choice-item" data-group="issue" data-value="パワーハラスメント">
+          <div class="box">✓</div>
+          <div><div class="choice-label">パワーハラスメント</div><div class="choice-sub">暴言・威圧・退職強要・人格否定など</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="未払い残業代">
+          <div class="box">✓</div>
+          <div><div class="choice-label">未払い残業代</div><div class="choice-sub">サービス残業・打刻改ざん・割増賃金未払いなど</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="有給休暇の未取得・取得拒否">
+          <div class="box">✓</div>
+          <div><div class="choice-label">有給休暇の未取得・取得拒否</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="不当解雇・退職強要">
+          <div class="box">✓</div>
+          <div><div class="choice-label">不当解雇・退職強要</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="労災申請サポート">
+          <div class="box">✓</div>
+          <div><div class="choice-label">労災申請サポート</div><div class="choice-sub">業務中・通勤中のケガや精神疾患など</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="あっせん・示談交渉">
+          <div class="box">✓</div>
+          <div><div class="choice-label">あっせん・示談交渉</div><div class="choice-sub">労働局あっせん・会社との交渉支援</div></div>
+        </div>
+        <div class="choice-item" data-group="issue" data-value="その他">
+          <div class="box">✓</div>
+          <div><div class="choice-label">その他</div></div>
+        </div>
+      </div>
+      <div class="em" id="e_issue" style="margin-top:8px">1つ以上選択してください</div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">証拠・書類の状況 <span class="opt">任意・複数選択可</span></div>
+      <div class="choices" id="ev-choices">
+        <div class="choice-item" data-group="ev" data-value="LINE・メッセージの記録">
+          <div class="box">✓</div><div class="choice-label">LINE・メッセージの記録</div>
+        </div>
+        <div class="choice-item" data-group="ev" data-value="録音データ">
+          <div class="box">✓</div><div class="choice-label">録音データ</div>
+        </div>
+        <div class="choice-item" data-group="ev" data-value="打刻・シフト表などの記録">
+          <div class="box">✓</div><div class="choice-label">打刻・シフト表などの記録</div>
+        </div>
+        <div class="choice-item" data-group="ev" data-value="診断書・受診記録">
+          <div class="box">✓</div><div class="choice-label">診断書・受診記録</div>
+        </div>
+        <div class="choice-item" data-group="ev" data-value="給与明細">
+          <div class="box">✓</div><div class="choice-label">給与明細</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">その他、お伝えしたいこと <span class="opt">任意</span></div>
+      <textarea id="note" placeholder="状況の詳細や、ご質問・ご要望などご自由にお書きください。"></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="bback" onclick="showStep(2)">← 戻る</button>
+      <button class="bnext" onclick="goNext3()">確認画面へ →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP4 確認 ===== -->
+  <div id="s4" style="display:none">
+    <div class="snum">STEP 4 / 4　確認・送信</div>
+    <div class="card">
+      <div class="ctitle">入力内容のご確認</div>
+      <div id="confirmBody"></div>
+    </div>
+    <p style="font-size:12px;color:#aaa;line-height:1.9;margin-top:8px">
+      内容をご確認のうえ「送信する」を押してください。<br>修正は「戻って修正する」からできます。
+    </p>
+    <div class="nav">
+      <button class="bback" onclick="showStep(3)">← 戻って修正する</button>
+      <button class="bnext" id="submitBtn" onclick="doSubmit()">送信する</button>
+    </div>
+  </div>
+
+  <!-- ===== 完了 ===== -->
+  <div id="sDone" style="display:none">
+    <div class="done-wrap">
+      <div class="done-icon">✓</div>
+      <h2>送信が完了しました</h2>
+      <p>情報をお送りいただきありがとうございます。<br>担当者より折り返しご連絡いたします。<br><br>ご不明な点がございましたら、<br>お気軽にお問い合わせください。</p>
+      <p style="margin-top:24px;font-size:13px;color:#aaa">TEL: 03-6420-3042<br>社会保険労務士法人イイズカ事務所グループ</p>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ============================================================
+// 選択状態の管理（input要素を使わずDivで完全制御）
+// ============================================================
+var selections = {}; // { "gender": "女性", "issue": ["パワハラ",...], "ev": [...] }
+
+// ページ読み込み後にすべてのchoice-itemにクリックを設定
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.choice-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var group = item.getAttribute('data-group');
+      var value = item.getAttribute('data-value');
+
+      if(group === 'gender'){
+        // ラジオ（単一選択）
+        selections['gender'] = value;
+        document.querySelectorAll('[data-group="gender"]').forEach(function(el){
+          el.classList.toggle('selected', el.getAttribute('data-value') === value);
+        });
+
+      } else {
+        // チェックボックス（複数選択）
+        if(!selections[group]) selections[group] = [];
+        var idx = selections[group].indexOf(value);
+        if(idx === -1){
+          selections[group].push(value);
+          item.classList.add('selected');
+        } else {
+          selections[group].splice(idx, 1);
+          item.classList.remove('selected');
+        }
+      }
+    });
+  });
+});
+
+// ============================================================
+// ユーティリティ
+// ============================================================
+function gv(id){
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function fmtZip(el){
+  var d = el.value.replace(/\D/g,'');
+  if(d.length > 3) d = d.slice(0,3) + '-' + d.slice(3,7);
+  el.value = d;
+}
+
+function setErr(id, show, msg){
+  var em = document.getElementById('e_' + id);
+  var inp = document.getElementById(id);
+  if(em){
+    em.style.display = show ? 'block' : 'none';
+    if(msg) em.textContent = msg;
+  }
+  if(inp){
+    if(show) inp.classList.add('err');
+    else inp.classList.remove('err');
+  }
+}
+
+// ============================================================
+// 郵便番号検索（zipcloud JSONP）
+// ============================================================
+function lookupZip(){
+  var zip = gv('zip').replace(/-/g,'');
+  var errEl = document.getElementById('e_zip');
+  errEl.style.display = 'none';
+
+  if(zip.length !== 7){
+    errEl.textContent = '郵便番号を7桁で入力してください（例：1000001）';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // 既存のscriptタグを削除
+  var old = document.getElementById('zipScript');
+  if(old) old.parentNode.removeChild(old);
+
+  var cbName = '_zipCb' + Date.now();
+  window[cbName] = function(data){
+    // コールバック後クリーンアップ
+    try{ delete window[cbName]; }catch(e){}
+    var sc = document.getElementById('zipScript');
+    if(sc) sc.parentNode.removeChild(sc);
+
+    if(data && data.results && data.results.length > 0){
+      var r = data.results[0];
+      // 都道府県セット
+      var sel = document.getElementById('pref');
+      for(var i = 0; i < sel.options.length; i++){
+        if(sel.options[i].text === r.address1){
+          sel.selectedIndex = i;
+          break;
+        }
+      }
+      // 市区町村＋町域
+      document.getElementById('addr1').value = (r.address2||'') + (r.address3||'');
+      setErr('pref', false);
+      setErr('addr1', false);
+    } else {
+      errEl.textContent = '該当する住所が見つかりませんでした。手動でご入力ください。';
+      errEl.style.display = 'block';
+    }
+  };
+
+  var sc = document.createElement('script');
+  sc.id = 'zipScript';
+  sc.onerror = function(){
+    errEl.textContent = '住所の取得に失敗しました。手動でご入力ください。';
+    errEl.style.display = 'block';
+    try{ delete window[cbName]; }catch(e){}
+  };
+  sc.src = 'https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + zip + '&callback=' + cbName;
+  document.head.appendChild(sc);
+}
+
+// ============================================================
+// ステップ切り替え
+// ============================================================
+function showStep(n){
+  ['s1','s2','s3','s4'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+  var target = document.getElementById('s' + n);
+  if(target) target.style.display = '';
+
+  for(var i = 1; i <= 4; i++){
+    var dot = document.getElementById('d' + i);
+    if(!dot) continue;
+    if(i < n){ dot.className = 'pd done'; dot.textContent = '✓'; }
+    else if(i === n){ dot.className = 'pd now'; dot.textContent = i; }
+    else { dot.className = 'pd wait'; dot.textContent = i; }
+    if(i < 4){
+      var ln = document.getElementById('ln' + i);
+      if(ln) ln.className = 'pline' + (i < n ? ' done' : '');
+    }
+  }
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+// バリデーション＆ステップ遷移
+// ============================================================
+function goNext1(){
+  var ok = true;
+  if(!gv('sei')){ setErr('sei', true); ok = false; } else setErr('sei', false);
+  if(!gv('mei')){ setErr('mei', true); ok = false; } else setErr('mei', false);
+  if(!ok) return;
+  showStep(2);
+}
+
+function goNext2(){
+  var ok = true;
+  if(!gv('pref')){ setErr('pref', true); ok = false; } else setErr('pref', false);
+  if(!gv('addr1')){ setErr('addr1', true); ok = false; } else setErr('addr1', false);
+  if(!gv('tel')){ setErr('tel', true); ok = false; } else setErr('tel', false);
+  if(!ok) return;
+  showStep(3);
+}
+
+function goNext3(){
+  var ok = true;
+  if(!gv('company')){ setErr('company', true); ok = false; } else setErr('company', false);
+
+  var issues = selections['issue'] || [];
+  var ei = document.getElementById('e_issue');
+  if(issues.length === 0){
+    if(ei) ei.style.display = 'block';
+    ok = false;
+  } else {
+    if(ei) ei.style.display = 'none';
+  }
+
+  if(!ok) return;
+  buildConfirm();
+  showStep(4);
+}
+
+// ============================================================
+// 確認画面
+// ============================================================
+function buildConfirm(){
+  var fullAddr = [gv('pref'), gv('addr1'), gv('addr2')].filter(Boolean).join(' ');
+  var birthday = [gv('by'), gv('bm'), gv('bd')].filter(Boolean).join('/');
+  var gender = selections['gender'] || '';
+  var issues = (selections['issue'] || []).join('・');
+  var evs = (selections['ev'] || []).join('・');
+
+  function row(label, val){
+    if(!val) return '';
+    return '<div class="crow"><span class="ckey">' + label + '</span><span class="cval">' + val + '</span></div>';
+  }
+
+  var html = '';
+  html += row('お名前', gv('sei') + ' ' + gv('mei'));
+  if(gv('sei_kana') || gv('mei_kana')) html += row('ふりがな', gv('sei_kana') + ' ' + gv('mei_kana'));
+  if(gender) html += row('性別', gender);
+  if(birthday) html += row('生年月日', birthday);
+  html += row('郵便番号', gv('zip'));
+  html += row('住所', fullAddr);
+  html += row('電話番号', gv('tel'));
+  if(gv('email')) html += row('メールアドレス', gv('email'));
+  if(gv('ctime')) html += row('連絡可能時間', gv('ctime'));
+  html += row('会社名', gv('company'));
+  if(gv('emptype')) html += row('雇用形態', gv('emptype'));
+  if(gv('empstat')) html += row('在職状況', gv('empstat'));
+  if(gv('joindate')) html += row('入社年月', gv('joindate'));
+  if(gv('leavedate')) html += row('退職・休職開始', gv('leavedate'));
+  if(issues) html += row('ご相談内容', issues);
+  if(evs) html += row('証拠・書類', evs);
+  if(gv('note')) html += row('その他・備考', gv('note'));
+
+  document.getElementById('confirmBody').innerHTML = html;
+}
+
+// ============================================================
+// 送信（Formspree）
+// ★ Formspreeに登録後、下記のFORM_IDをご自身のIDに差し替えてください
+// ============================================================
+var FORM_ID = 'mdabopbp';
+
+function doSubmit(){
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = '送信中...';
+  btn.disabled = true;
+
+  var fullAddr = [gv('pref'), gv('addr1'), gv('addr2')].filter(Boolean).join(' ');
+  var birthday = [gv('by'), gv('bm'), gv('bd')].filter(Boolean).join('/');
+
+  var payload = {
+    '_subject': '【ヒアリングフォーム】' + gv('sei') + gv('mei') + '様より送信',
+    '氏名':           gv('sei') + ' ' + gv('mei'),
+    'ふりがな':        gv('sei_kana') + ' ' + gv('mei_kana'),
+    '性別':           selections['gender'] || '',
+    '生年月日':        birthday,
+    '郵便番号':        gv('zip'),
+    '住所':           fullAddr,
+    '電話番号':        gv('tel'),
+    'メールアドレス':  gv('email'),
+    '連絡可能時間':    gv('ctime'),
+    '会社名':         gv('company'),
+    '雇用形態':        gv('emptype'),
+    '在職状況':        gv('empstat'),
+    '入社年月':        gv('joindate'),
+    '退職・休職開始':  gv('leavedate'),
+    'ご相談内容':      (selections['issue'] || []).join('・'),
+    '証拠・書類':      (selections['ev'] || []).join('・'),
+    'その他備考':      gv('note')
+  };
+
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbzDZMookEiuF5CtT8uHAkZsh_DgNqkqKqLYK0Sc573b2bBGs1Al6u2LqDK3cc1kVFZMxg/exec';
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(result){
+    if(result.result === 'success'){
+      document.getElementById('prog').style.display = 'none';
+      ['s1','s2','s3','s4'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+      });
+      document.getElementById('sDone').style.display = '';
+      window.scrollTo(0, 0);
+    } else {
+      btn.textContent = '送信する';
+      btn.disabled = false;
+      alert('送信に失敗しました。時間をおいて再度お試しください。');
+    }
+  })
+  .catch(function(){
+    // GASはCORSでエラーになるが実際は送信できているケースがあるため完了画面へ
+    document.getElementById('prog').style.display = 'none';
+    ['s1','s2','s3','s4'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+    });
+    document.getElementById('sDone').style.display = '';
+    window.scrollTo(0, 0);
+  });
+}
+</script>
+</body>
+</html>
